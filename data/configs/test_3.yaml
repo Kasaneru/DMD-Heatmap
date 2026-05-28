@@ -1,0 +1,40 @@
+Name: 'test_3'
+Lx: 10.0
+Ly: 10.0
+Nx: 100
+Ny: 100
+a: 0.1
+T: 10.0
+dt: 0.01
+u_top: 0
+u_bottom: 0
+u_left: 0
+u_right: 0
+mean: 0
+variance: 0.01
+method: explicit
+sources:
+  source_1:
+    amp: 400
+    x0: 5.0
+    y0: 5.0
+    width: 0.5
+    omega: 4.5
+    phi: 0
+  source_2:
+    amp: 200
+    x0: 4.9
+    y0: 4.9
+    width: 0.5
+    omega: 4.0
+    phi: 0
+  source_3:
+    amp: 200
+    x0: 5.1
+    y0: 5.1
+    width: 0.5
+    omega: 2.0
+    phi: 3.14
+save_interval: 5
+modes: 10
+hankel: 0
