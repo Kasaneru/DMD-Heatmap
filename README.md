@@ -3,11 +3,10 @@
 Адамов Артур Адамович М8О-409Б-22
 
 # Инструкция по запуску
-Для запуска рекомендуется использовать пакетный менеджер uv.
 
 1. Установка зависимостей
-`uv pip intall -r requirements.txt`
+`pip intall -r requirements.txt`
 2. Решение уравнения из конфигурации
-`uv run src/solver.py test_1`
+`python3 src/solver.py test_1`
 3. Диагностика полученных данных
-`uv run src/heatdmd.py test_1`
+`python3 src/heatdmd.py test_1`
