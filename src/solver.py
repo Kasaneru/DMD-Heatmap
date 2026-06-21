@@ -6,7 +6,10 @@ import os
 import sys
 from utils import load_config
 
-def solve(c: dict, method='explicit', to_show=False, save=True, save_dir='data/heat_data/'):
+def solve(conf_name: str, method='explicit', to_show=False, save=True, save_dir='data/heat_data/'):
+    c_path = os.path.join('data/configs/', conf_name+'.yaml')
+    c = load_config(c_path)
+
     x = np.linspace(0, c['Lx'], c['Nx'])
     y = np.linspace(0, c['Ly'], c['Ny'])
     dx = c['Lx'] / (c['Nx'] - 1)
@@ -19,10 +22,18 @@ def solve(c: dict, method='explicit', to_show=False, save=True, save_dir='data/h
     X, Y = np.meshgrid(x, y)
     u = np.zeros((c['Nx'], c['Ny']))
     heat_sources = []
+    ji = 0
     for name, p in c.get('sources', {}).items():
-        heat_sources.append(lambda t, p=p:
-            p['amp'] * (1 + np.sin(p['omega'] * t + p['phi'])) / 2 * np.exp(-((X - p['x0'])**2 + (Y - p['y0'])**2) / (2 * p['width']**2))
-        )
+        # if ji == 0:
+            # heat_sources.append(lambda t, p=p:
+            #     (p['amp'] - t*10) * (1 + np.sin(p['omega'] * t + p['phi'])) / 2 * np.exp(-((X - p['x0'])**2 + (Y - p['y0'])**2) / (2 * p['width']**2))
+            # )
+        # else:
+            heat_sources.append(lambda t, p=p:
+                p['amp'] * (1 + np.sin(p['omega'] * t + p['phi'])) / 2 * np.exp(-((X - p['x0'])**2 + (Y - p['y0'])**2) / (2 * p['width']**2))
+            )
+        # ji += 1
+
 
     print(len(c.get('sources', {}).items()))
 
@@ -69,17 +80,17 @@ def solve(c: dict, method='explicit', to_show=False, save=True, save_dir='data/h
     if to_show:
         fig, axs = plt.subplots(1,5, gridspec_kw={'wspace': 0.3})
         for i in range(5):
-            cont = axs[i].contourf(u_data[20+i*20], levels=50, cmap='hot', origin='upper')
+            # cont = axs[i].contourf(u_data[20+i*20], levels=50, cmap='hot', origin='upper')
             axs[i].set_xlabel('x')
             axs[i].set_ylabel('y')
-            # sns.heatmap(u_data[20+i*20][25:75, 25:75],
-            #             ax = axs[i],
-            #             xticklabels=False,
-            #             yticklabels=False,
-            #             vmin=0,
-            #             vmax=180,
-            #             cmap='hot')
-        plt.colorbar(cont, ax=axs[4])
+            sns.heatmap(u_data[20+i*20],
+                        ax = axs[i],
+                        xticklabels=False,
+                        yticklabels=False,
+                        vmin=0,
+                        vmax=180,
+                        cmap='hot')
+        # plt.colorbar(cont, ax=axs[4])
         plt.tight_layout()
         plt.show()
 
@@ -91,9 +102,7 @@ def solve(c: dict, method='explicit', to_show=False, save=True, save_dir='data/h
 
 if __name__ == '__main__':
     conf_name = sys.argv[1]
-    c_path = os.path.join('data/configs/', conf_name+'.yaml')
-    data = load_config(c_path)
-    if data:
-        solve(data, to_show=True)
+    if conf_name:
+        solve(conf_name, to_show=True)
     else:
         print(f'Конфиг не найден!')
